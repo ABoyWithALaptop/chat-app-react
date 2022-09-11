@@ -23,6 +23,7 @@ export const InputContainer = styled.div`
   border-radius: 10px;
   width: 100%;
   box-sizing: border-box;
+
 `;
 
 export const InputLabel = styled.label`
