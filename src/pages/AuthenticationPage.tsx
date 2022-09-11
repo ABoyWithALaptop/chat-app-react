@@ -1,6 +1,10 @@
 import { RegisterForm } from "../components/forms/RegisterForm"
+import { Page } from "../utils/styles"
 
 export const AuthenticationPage = () => {
-  return <div>
-    <RegisterForm /></div>
+  return (
+    <Page>
+      <RegisterForm />
+    </Page>
+  )
 }
