@@ -1,7 +1,10 @@
+import React from "react"
 import { RegisterForm } from "../components/forms/RegisterForm"
 import { Page } from "../utils/styles"
 
-export const AuthenticationPage = () => {
+export const RegisterPage = () => {
+
+
   return (
     <Page>
       <RegisterForm />

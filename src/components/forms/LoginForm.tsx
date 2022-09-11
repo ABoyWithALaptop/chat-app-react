@@ -3,7 +3,7 @@ import { Button, InputContainer, InputField, InputLabel } from "../../utils/styl
 import styles from './index.module.scss'
 
 
-export const RegisterForm = () => {
+export const LoginForm = () => {
 
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -16,28 +16,16 @@ export const RegisterForm = () => {
         <InputLabel htmlFor="email">Label</InputLabel>
         <InputField id='email' type='text' />
       </InputContainer>
-
-      <section className={styles.nameFieldRow}>
-        <InputContainer className={styles.nameContainer}>
-          <InputLabel htmlFor="firstName">First Name</InputLabel>
-          <InputField id='firstName' type='text' />
-        </InputContainer>
-        <InputContainer>
-          <InputLabel htmlFor="lastName">Last Name</InputLabel>
-          <InputField id='lastName' type='text' />
-        </InputContainer>
-      </section>
-
-      <InputContainer>
+      <InputContainer className={styles.loginFormPassword}>
         <InputLabel htmlFor="password">PassWord</InputLabel>
         <InputField id='password' type='password' />
       </InputContainer>
-      <Button className={styles.button}> Create My Account</Button>
+      <Button className={styles.button}> Login</Button>
       <div className={styles.footerText}>
         <span>
-          Already have an account?
+          Don't have an account?
         </span>
-        <Link to='/login'>Login</Link>
+        <Link to='/register'>Register</Link>
       </div>
     </form>
   )

@@ -11,7 +11,7 @@ export const InputField = styled.input`
   color:#fff;
   font-family: 'Inter';
   font-size: 18px;
-  width: 100%
+  width: 100%;
   box-sizing: border-box;
   padding: 0;
   margin: 4px 0;
@@ -38,12 +38,24 @@ export const Button = styled.button`
   background-color: #2b09ff;
   color: #fff;
   font-family: 'Inter';
+  font-weight: 500;
   font-size: 18px;
   padding: 20px 0;
-  border: none;
-  outline: none;
+  border: 2px solid #2b09ff;
   border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+  transition: background-color 500ms ease;
+  transition: border 500ms ease;
 
+  & :hover {
+    cursor: pointer;
+    background-color: #381afa
+  }
+  & :focus {
+    background-color: #381afa;
+    border: 2px solid #ffffff;
+  }
 `
 
 export const Page = styled.div`
