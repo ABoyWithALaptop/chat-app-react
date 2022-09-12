@@ -79,7 +79,7 @@ export const ConversationSidebarStyle = styled.aside`
   left: 0;
   overflow-y: scroll;
   ::-webkit-scrollbar {
-    display: none;
+    display:none
   }
 `;
 export const ConversationSidebarHeader = styled.header`
