@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { PageProps } from './styleTypes';
 
 export const DARK = '#131313';
 
 // export const theme = 
+const SIDEBAR_WIDTH = 450;
 
 export const InputField = styled.input`
   background: inherit;
@@ -49,20 +51,48 @@ export const Button = styled.button`
   transition: background-color 500ms ease;
   transition: border 500ms ease;
 
-  & :hover {
+  &:hover {
     cursor: pointer;
     background-color: #381afa
   }
-  & :focus {
+  &:focus {
     background-color: #381afa;
     border: 2px solid #ffffff;
   }
 `
 
-export const Page = styled.div`
+export const Page = styled.div<PageProps>`
   height: 100%;
   background-color: #1a1a1a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: ${(props) => props.display};
+  justify-content: ${(props) => props.justifyContent};
+  align-items: ${(props) => props.alignItems};
+`
+
+export const ConversationSidebarStyle = styled.aside`
+  background-color: #1a1a1a;
+  border-right: 1px solid #5454543d;
+  width:${SIDEBAR_WIDTH}px ;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    align-items: center;
+    background-color: #151515;
+    height: 6.5rem;
+    border-bottom: 1px solid #5454543d;
+    h1 {
+      font-weight: 500;
+    }
+  }
+`;
+
+export const ConversationChannelPageStyle = styled.div`
+  height: 100%;
+  margin-left: ${SIDEBAR_WIDTH}px ;
 `

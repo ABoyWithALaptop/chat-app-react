@@ -1,9 +1,11 @@
-import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import { Outlet, Route, Routes, BrowserRouter as Switch } from 'react-router-dom'
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
+import { ConversationPage } from './pages/ConversationPage';
+import { ConversationChannelPage } from './pages/ConversationChannelPage';
+import { ConversationPanel } from './components/conversation/ConversationPanel';
 
 function App() {
   return (
@@ -15,15 +17,11 @@ function App() {
           <Route
             path='/conversations'
             element={
-              <div>
-                <div>
-                  Conversations
-                </div>
-                <Outlet />
-              </div>
+              <ConversationPage />
             }
           >
-            <Route path=':id' element={<div> Conversation id page</div>}></Route>
+            <Route index element={<ConversationPanel />}></Route>
+            <Route path=':id' element={<ConversationChannelPage />}></Route>
           </Route>
         </Routes>
       </Switch>
