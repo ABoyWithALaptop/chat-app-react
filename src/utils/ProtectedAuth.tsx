@@ -1,8 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { Navigate, useLocation } from "react-router";
-import { getAuthUser } from "./api";
 import { useAuth } from "./hooks/useAuth";
-import { User } from "./types/types";
 
 type Props = {
   children: React.ReactNode;
