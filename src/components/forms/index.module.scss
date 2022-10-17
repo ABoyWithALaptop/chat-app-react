@@ -27,3 +27,11 @@ form {
   margin: 0.875rem 0;
   text-align: center;
 }
+
+.createConversationForm {
+  width:100%;
+  & :not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+

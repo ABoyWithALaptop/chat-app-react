@@ -5,7 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { ConversationPage } from "./pages/ConversationPage";
 import { ConversationChannelPage } from "./pages/ConversationChannelPage";
 import { ConversationPanel } from "./components/conversation/ConversationPanel";
-import { ProtectedRoute } from "./utils/ProtectedAuth";
+import { ProtectedRoute } from "./components/ProtectedAuth";
 import { AuthContext } from "./utils/context/AuthContext";
 import { useState } from "react";
 import { User } from "./utils/types/types";

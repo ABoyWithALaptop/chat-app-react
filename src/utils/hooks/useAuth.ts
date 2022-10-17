@@ -12,11 +12,11 @@ export function useAuth() {
     getAuthUser()
       .then(({ data }) => {
         updateAuthUser(data);
-        setTimeout(() => setLoading(false), 5000);
+        setTimeout(() => setLoading(false), 1000);
       })
       .catch((err) => {
         console.log(err);
-        setTimeout(() => setLoading(false), 5000);
+        setTimeout(() => setLoading(false), 1000);
       });
     return () => {
       controller.abort();
