@@ -9,6 +9,7 @@ type Props = {
 export const ProtectedRoute: FC<Props> = ({ children }) => {
   const location = useLocation();
   const auth = useAuth();
+  console.log("protected");
 
   if (auth.loading) {
     return <div>Loading</div>;

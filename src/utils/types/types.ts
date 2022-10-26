@@ -1,6 +1,7 @@
-export type ConversationType = {
+export type Conversation = {
   id: number;
-  name: string;
+  creator: User;
+  recipient: User;
   lastMessage: string;
 };
 
