@@ -3,6 +3,7 @@
   color: white;
   /* background-color: #282c34; */
   height: 100%;
+  box-sizing: border-box;
 }
 
 .App-logo {

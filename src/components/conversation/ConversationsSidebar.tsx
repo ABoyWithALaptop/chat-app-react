@@ -6,7 +6,7 @@ import {
 } from "../../utils/styles";
 import { TbEdit } from "react-icons/tb";
 import { FC, useContext, useState } from "react";
-import { Conversation } from "../../utils/types/types";
+import { Conversation, Message } from "../../utils/types/types";
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router";
 import { CreateConversationModal } from "../modals/CreateConversationModal";
@@ -26,6 +26,10 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
       : conversation.recipient;
   };
 
+  const showShortMessage = (content: string) => {
+    return content.length > 100 ? <>{content.slice(0, 99)}&hellip;</> : content;
+  };
+
   return (
     <>
       {showModel && <CreateConversationModal setShowModel={setShowModel} />}
@@ -42,18 +46,20 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
 
             return (
               <ConversationSidebarItem
-                onClick={() => navigate(`/conversations/${conversation.id}`)}
+                onClick={() => {
+                  navigate(`/conversations/${conversation.id}`);
+                }}
                 key={conversation.id}
               >
                 <div className={styles.conversationAvatar}></div>
-                <div>
+                <div className={styles.info}>
                   <span className={styles.conversationName}>
                     {" "}
                     {`${guess.lastName}  ${guess.firstName}`}
                   </span>
                   <span className={styles.conversationLastMessage}>
                     {" "}
-                    {conversation.lastMessage}
+                    {showShortMessage(conversation.lastMessageSent.content)}
                   </span>
                 </div>
               </ConversationSidebarItem>

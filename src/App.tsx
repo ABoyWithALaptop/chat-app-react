@@ -8,10 +8,12 @@ import { ConversationPanel } from "./components/conversation/ConversationPanel";
 import { ProtectedRoute } from "./components/ProtectedAuth";
 import { AuthContext } from "./utils/context/AuthContext";
 import { useState } from "react";
-import { User } from "./utils/types/types";
+import { Conversation, User } from "./utils/types/types";
+import { ConversationContext } from "./utils/context/ConversationContext";
 
 function App() {
   const [user, setUser] = useState<User>();
+  const [conversation, setConversation] = useState<Conversation>();
   return (
     <AuthContext.Provider value={{ user, updateAuthUser: setUser }}>
       <div className="App">

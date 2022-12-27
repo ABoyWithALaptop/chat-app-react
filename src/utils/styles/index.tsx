@@ -87,8 +87,8 @@ export const ConversationSidebarHeader = styled.header`
   padding: 0 2rem;
   align-items: center;
   background-color: #151515;
-  height: 6.5rem;
-  border-bottom: 1px solid #5454543d;
+  height: 9.9vh;
+  border-bottom: 0.1vh solid #5454543d;
   h1 {
     font-weight: 500;
   }
@@ -97,8 +97,9 @@ export const ConversationSidebarHeader = styled.header`
 `;
 
 export const ConversationChannelPageStyle = styled.div`
-  height: 100%;
+  height: 100vh;
   margin-left: ${SIDEBAR_WIDTH}px;
+  background-color: #1f1f1f;
 `;
 export const ConversationSidebarContainer = styled.div``;
 
@@ -161,4 +162,148 @@ export const TextFieldStyle = styled.textarea`
   ::-webkit-scrollbar {
     display: none;
   }
+`;
+
+export const MessagePanelStyle = styled.div`
+  background: inherit;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+`;
+
+export const MessageContainerStyle = styled.div`
+  height: 100%;
+  /* border: 1px solid #ffff; */
+  box-sizing: border-box;
+  padding-left: 12px;
+  display: flex;
+  /* justify-content: flex-end; */
+  flex-direction: column-reverse;
+  overflow-y: scroll;
+  :first-child {
+    margin-top: auto !important;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const MessageInputContainerStyle = styled.div`
+  box-sizing: border-box;
+  /* padding: 32px; */
+  margin-top: 32px;
+  background-color: #101010;
+  border-radius: 5px;
+`;
+
+export const MessageInputFieldStyle = styled.textarea`
+  background-color: inherit;
+  outline: none;
+  border: none;
+  margin: 24px 0;
+  padding-inline: 32px;
+  color: #949494;
+  font-family: "Inter";
+  font-size: 18px;
+  resize: none;
+  width: 100%;
+  box-sizing: border-box;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  height: 100px;
+`;
+
+export const MessageItemContainerStyle = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 5px 0;
+  /* width: 1000px; */
+  &.author {
+    .name {
+      color: #fff;
+    }
+    /* float: right; */
+    /* flex-direction: row-reverse; */
+  }
+  &.recipient {
+    .name {
+      color: #5e8bff;
+    }
+  }
+  &.noDetail {
+    padding-left: 70px;
+    display: flex;
+    width: 90%;
+    /* height: 60px; */
+    justify-content: space-between;
+    .time {
+      color: #6d6d6d;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
+`;
+
+export const MessageItemAvatar = styled.div`
+  width: 50px;
+  height: 50px;
+  background-color: #b12b2b;
+  border-radius: 50%;
+`;
+
+export const MessageItemDetails = styled.div`
+  /* display: flex;
+  width: 90%;
+  justify-content: space-between;
+  .time {
+    color: #6d6d6d;
+    font-size: 12px;
+    font-weight: bold;
+  } */
+  display: block;
+  width: 90%;
+`;
+
+export const MessageItemHeader = styled.div`
+  display: flex;
+  /* gap: 12px; */
+  justify-content: space-between;
+  width: 100%;
+
+  .authorName {
+    font-weight: 600;
+    font-size: 16px;
+  }
+`;
+
+export const MessageItemContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  span:first-child {
+    /* display: block; */
+    max-width: 70%;
+  }
+  .time {
+    color: #6d6d6d;
+    font-size: 12px;
+    font-weight: bold;
+  }
+`;
+
+export const MessagePanelHeaderStyle = styled.div`
+  background-color: #151515;
+  /* padding-bottom: 20px; */
+  border-bottom: 0.1vh solid #5454543d;
+  height: 9.9vh;
+  line-height: 9.9vh;
+  font-weight: 400;
+  margin: 0;
+  padding-inline: 36px;
+  font-size: 20px;
 `;

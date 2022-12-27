@@ -8,7 +8,7 @@ import {
 import styles from "./index.module.scss";
 import { useForm } from "react-hook-form";
 import { UserCredential } from "../../utils/types/types";
-import { postLoging } from "../../utils/api";
+import { postLogging } from "../../utils/api";
 import { useState } from "react";
 
 export const LoginForm = () => {
@@ -23,7 +23,7 @@ export const LoginForm = () => {
 
   const onSubmit = async (data: UserCredential) => {
     try {
-      await postLoging(data);
+      await postLogging(data);
       navigate("/conversations");
     } catch (error) {
       console.log(error);
