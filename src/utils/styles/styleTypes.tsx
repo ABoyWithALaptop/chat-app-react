@@ -7,3 +7,8 @@ export type PageProps = Partial<{
 export type InputContainerPageProps = Partial<{
   backgroundColor: string;
 }>;
+
+export type MessageItemContentProps = Partial<{
+  padding: string;
+  direction: string;
+}>;

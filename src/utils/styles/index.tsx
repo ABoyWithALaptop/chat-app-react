@@ -1,7 +1,12 @@
 import styled from "styled-components";
-import { InputContainerPageProps, PageProps } from "./styleTypes";
+import {
+  InputContainerPageProps,
+  MessageItemContentProps,
+  PageProps,
+} from "./styleTypes";
 
 export const DARK = "#131313";
+export const paddingMessageDetail = "12px";
 
 // export const theme =
 const SIDEBAR_WIDTH = 450;
@@ -166,12 +171,6 @@ export const TextFieldStyle = styled.textarea`
 
 export const MessagePanelStyle = styled.div`
   background: inherit;
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  box-sizing: border-box;
-  position: relative;
 `;
 
 export const MessageContainerStyle = styled.div`
@@ -190,7 +189,16 @@ export const MessageContainerStyle = styled.div`
     display: none;
   }
 `;
-
+export const MessagePanelBodyStyle = styled.div`
+  background: inherit;
+  height: calc(100vh - 10vh);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+`;
+// MessageInputField component's child style
 export const MessageInputContainerStyle = styled.div`
   box-sizing: border-box;
   /* padding: 32px; */
@@ -221,32 +229,7 @@ export const MessageItemContainerStyle = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  padding: 5px 0;
-  /* width: 1000px; */
-  &.author {
-    .name {
-      color: #fff;
-    }
-    /* float: right; */
-    /* flex-direction: row-reverse; */
-  }
-  &.recipient {
-    .name {
-      color: #5e8bff;
-    }
-  }
-  &.noDetail {
-    padding-left: 70px;
-    display: flex;
-    width: 90%;
-    /* height: 60px; */
-    justify-content: space-between;
-    .time {
-      color: #6d6d6d;
-      font-size: 12px;
-      font-weight: bold;
-    }
-  }
+  padding: 3px 0;
 `;
 
 export const MessageItemAvatar = styled.div`
@@ -274,25 +257,24 @@ export const MessageItemHeader = styled.div`
   /* gap: 12px; */
   justify-content: space-between;
   width: 100%;
-
-  .authorName {
-    font-weight: 600;
-    font-size: 16px;
-  }
 `;
 
-export const MessageItemContent = styled.div`
+export const MessageItemContent = styled.div<MessageItemContentProps>`
+  padding: ${({ padding }) => padding};
+  flex-direction: ${({ direction }) => direction};
+
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   width: 100%;
+  span {
+    padding: ${paddingMessageDetail};
+  }
   span:first-child {
+    background-color: #575757;
     /* display: block; */
     max-width: 70%;
-  }
-  .time {
-    color: #6d6d6d;
-    font-size: 12px;
-    font-weight: bold;
+    padding: ${paddingMessageDetail};
+    border-radius: 10px;
   }
 `;
 

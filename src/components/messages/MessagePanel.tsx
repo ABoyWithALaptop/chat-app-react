@@ -1,18 +1,23 @@
 import { FC } from "react";
-import { MessagePanelStyle } from "../../utils/styles";
-import { Message } from "../../utils/types/types";
+import { MessagePanelBodyStyle, MessagePanelStyle } from "../../utils/styles";
+import { Message, User } from "../../utils/types/types";
 import { MessageContainer } from "./MessageContainer";
 import { MessageInputField } from "./MessageInputField";
+import { MessagePanelHeader } from "./MessagePanelHeader";
 
 type Props = {
   message: Message[];
+  recipient: User;
 };
 
-export const MessagePanel: FC<Props> = ({ message }) => {
+export const MessagePanel: FC<Props> = ({ message, recipient }) => {
   return (
     <MessagePanelStyle>
-      <MessageContainer message={message} />
-      <MessageInputField />
+      <MessagePanelHeader recipient={recipient}></MessagePanelHeader>
+      <MessagePanelBodyStyle>
+        <MessageContainer message={message} />
+        <MessageInputField />
+      </MessagePanelBodyStyle>
     </MessagePanelStyle>
   );
 };

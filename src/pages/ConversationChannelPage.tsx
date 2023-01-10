@@ -1,34 +1,51 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { MessageContainer } from "../components/messages/MessageContainer";
 import { MessagePanel } from "../components/messages/MessagePanel";
-import { MessagePanelHeader } from "../components/messages/MessagePanelHeader";
 import { getConversationMessages, getConversationsById } from "../utils/api";
 import { AuthContext } from "../utils/context/AuthContext";
+import { SocketContext } from "../utils/context/SocketContext";
 import { ConversationChannelPageStyle } from "../utils/styles";
-import { Message, User } from "../utils/types/types";
+import { Message, MessageEventPayload, User } from "../utils/types/types";
+
+const addMessage = (
+  setState: React.Dispatch<React.SetStateAction<Message[]>>,
+  message: Message
+) => {
+  setState((prev) => [message, ...prev]);
+};
 
 export const ConversationChannelPage = () => {
   const { user } = useContext(AuthContext);
+  const socket = useContext(SocketContext);
   const { id } = useParams();
   const [message, setMessage] = useState<Message[]>([]);
   const [recipient, setRecipient] = useState<User>();
   useEffect(() => {
-    console.log(id);
     getConversationMessages(parseInt(id!)).then(({ data }) => {
-      console.log(data);
       setMessage(data);
-      console.log("data", data[0].content);
     });
     getConversationsById(parseInt(id!)).then(({ data }) => {
-      console.log(data);
       setRecipient(data.recipient);
     });
   }, [id]);
+
+  useEffect(() => {
+    console.log(socket);
+    socket.on("connected", () => console.log("connected"));
+    socket.on("onMessage", (payload: MessageEventPayload) => {
+      console.log("Message received");
+      const { conversation, ...message } = payload;
+      addMessage(setMessage, payload);
+    });
+    return () => {
+      socket.off("connected");
+      socket.off("onMessage");
+    };
+  }, []);
+
   return (
     <ConversationChannelPageStyle>
-      <MessagePanelHeader recipient={recipient}></MessagePanelHeader>
-      <MessagePanel message={message}></MessagePanel>
+      <MessagePanel message={message} recipient={recipient!}></MessagePanel>
     </ConversationChannelPageStyle>
   );
 };

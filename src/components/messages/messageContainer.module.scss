@@ -1,0 +1,52 @@
+.time {
+  color: #000;
+  font-size: 12px;
+  // font-weight: bold;
+  visibility: hidden;
+  vertical-align: middle;
+  // margin-left: 10px;
+  align-items: center;
+  background-color: #f8ede39a;
+  border-radius: 10px;
+  opacity: 0;
+  transition:  opacity 0.15s linear
+}
+.showNoti {
+  visibility: visible;
+  opacity: 1;
+}
+.authorName {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.author {
+  .name {
+    color: #fff;
+  }
+  flex-direction: row-reverse;
+}
+.recipient {
+  .name {
+    color: #5e8bff;
+  }
+}
+.noDetail {
+  padding-left: 70px!important;
+  display: flex;
+  width: 90%;
+  /* height: 60px; */
+  justify-content: space-between;
+}
+
+// animation
+@keyframes showUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
