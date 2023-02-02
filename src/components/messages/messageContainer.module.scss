@@ -24,7 +24,7 @@
   .name {
     color: #fff;
   }
-  flex-direction: row-reverse;
+  // flex-direction: row-reverse;
 }
 .recipient {
   .name {
@@ -35,18 +35,6 @@
   padding-left: 70px!important;
   display: flex;
   width: 90%;
-  /* height: 60px; */
   justify-content: space-between;
 }
 
-// animation
-@keyframes showUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}

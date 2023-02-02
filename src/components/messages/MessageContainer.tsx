@@ -14,7 +14,7 @@ import { Message, User } from "../../utils/types/types";
 import styles from "./messageContainer.module.scss";
 
 type Props = {
-  message: Message[];
+  messages: Message[];
 };
 type FormattedProps = {
   mess: Message;
@@ -52,14 +52,14 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
   );
 };
 
-export const MessageContainer: FC<Props> = ({ message }) => {
+export const MessageContainer: FC<Props> = ({ messages }) => {
   const { user } = useContext(AuthContext);
 
   const formatMessage = (messages: Message[]) => {
     return messages.map((m: Message, i: number) => {
-      const prevIndex = i !== message.length - 1 ? i + 1 : i;
+      const prevIndex = i !== messages.length - 1 ? i + 1 : i;
       const prevMess = messages[prevIndex];
-      if (m.author.id !== prevMess.author.id || i === message.length - 1)
+      if (m.author.id !== prevMess.author.id || i === messages.length - 1)
         return (
           <MessageItemContainerStyle
             className={
@@ -94,6 +94,6 @@ export const MessageContainer: FC<Props> = ({ message }) => {
   };
 
   return (
-    <MessageContainerStyle>{formatMessage(message)}</MessageContainerStyle>
+    <MessageContainerStyle>{formatMessage(messages)}</MessageContainerStyle>
   );
 };

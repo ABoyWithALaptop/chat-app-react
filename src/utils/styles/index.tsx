@@ -207,7 +207,7 @@ export const MessageInputContainerStyle = styled.div`
   border-radius: 5px;
 `;
 
-export const MessageInputFieldStyle = styled.textarea`
+export const MessageInputFieldStyle = styled.input`
   background-color: inherit;
   outline: none;
   border: none;
@@ -222,7 +222,8 @@ export const MessageInputFieldStyle = styled.textarea`
   ::-webkit-scrollbar {
     display: none;
   }
-  height: 100px;
+
+  /* height: 100px; */
 `;
 
 export const MessageItemContainerStyle = styled.div`

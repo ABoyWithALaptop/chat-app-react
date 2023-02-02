@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import {
   Conversation,
   createConversationParams,
+  CreateMessageParams,
   CreateUserParams,
   User,
   UserCredential,
@@ -36,4 +37,8 @@ export const createConversation = (
 };
 export const getConversationsById = (id: number) => {
   return axios.get<Conversation>(`${API_URL}/conversations/${id}`, config);
+};
+
+export const postMessage = (postMessage: CreateMessageParams) => {
+  return axios.post(`${API_URL}/messages`, { ...postMessage }, config);
 };
