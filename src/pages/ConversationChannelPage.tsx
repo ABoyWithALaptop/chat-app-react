@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { showDisplayUser } from "../components/conversation/ConversationsSidebar";
 import { MessagePanel } from "../components/messages/MessagePanel";
 import { getConversationMessages, getConversationsById } from "../utils/api";
 import { AuthContext } from "../utils/context/AuthContext";
@@ -26,11 +27,13 @@ export const ConversationChannelPage = () => {
     });
     getConversationsById(parseInt(id!)).then(({ data }) => {
       setRecipient(data.recipient);
+      const reciptPerson = showDisplayUser(data, user!);
+      setRecipient(reciptPerson);
     });
   }, [id]);
 
   useEffect(() => {
-    console.log(socket);
+    // console.log(socket);
     socket.on("connected", () => console.log("connected"));
     socket.on("onMessage", (payload: MessageEventPayload) => {
       console.log("Message received");
@@ -45,7 +48,7 @@ export const ConversationChannelPage = () => {
 
   return (
     <ConversationChannelPageStyle>
-      <MessagePanel message={message} recipient={recipient!}></MessagePanel>
+      <MessagePanel messages={message} recipient={recipient!}></MessagePanel>
     </ConversationChannelPageStyle>
   );
 };

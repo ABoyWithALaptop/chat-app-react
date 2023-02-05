@@ -23,6 +23,8 @@ export const LoginForm = () => {
 
   const onSubmit = async (data: UserCredential) => {
     try {
+      data.email = data.email.trim();
+      data.password = data.password.trim();
       await postLogging(data);
       navigate("/conversations");
     } catch (error) {

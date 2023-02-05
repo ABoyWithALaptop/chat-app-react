@@ -55,6 +55,7 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
 export const MessageContainer: FC<Props> = ({ messages }) => {
   const { user } = useContext(AuthContext);
 
+  /* A function that takes in an array of messages and returns a new array of messages jsx elements. */
   const formatMessage = (messages: Message[]) => {
     return messages.map((m: Message, i: number) => {
       const prevIndex = i !== messages.length - 1 ? i + 1 : i;
@@ -65,6 +66,7 @@ export const MessageContainer: FC<Props> = ({ messages }) => {
             className={
               user?.id === m.author.id ? styles.author : styles.recipient
             }
+            key={m.id}
           >
             <MessageItemAvatar />
             <MessageItemDetails>
@@ -86,6 +88,7 @@ export const MessageContainer: FC<Props> = ({ messages }) => {
             className={`${styles.noDetail} ${
               user?.id === m.author.id ? styles.author : styles.recipient
             }`}
+            key={m.id}
           >
             <FormattedMessage mess={m} />
           </MessageItemContainerStyle>
