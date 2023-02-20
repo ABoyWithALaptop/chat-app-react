@@ -1,7 +1,7 @@
 import { formatRelative } from "date-fns";
-import { FC, useContext, useEffect, useState } from "react";
-import { getConversationMessages } from "../../utils/api";
-import { AuthContext } from "../../utils/context/AuthContext";
+import { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 import {
   MessageContainerStyle,
   MessageItemAvatar,
@@ -53,7 +53,7 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
 };
 
 export const MessageContainer: FC<Props> = ({ messages }) => {
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   /* A function that takes in an array of messages and returns a new array of messages jsx elements. */
   const formatMessage = (messages: Message[]) => {

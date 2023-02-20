@@ -1,27 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useParams } from "react-router";
 import { ConversationsSidebar } from "../components/conversation/ConversationsSidebar";
-import { getConversations } from "../utils/api";
-import { ConversationContext } from "../utils/context/ConversationContext";
+import { AppDispatch, RootState } from "../store";
+import { fetchConversationsThunk } from "../store/conversationSlice";
 import { Page } from "../utils/styles";
-import { Conversation } from "../utils/types/types";
 
 export const ConversationPage = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  useEffect(() => {
-    getConversations()
-      .then(({ data }) => {
-        console.log(data);
-        setConversations(data);
-      })
-      .catch((err) => console.error(err));
+  const dispatch = useDispatch<AppDispatch>();
+  const conversation = useSelector(
+    (state: RootState) => state.conversation.conversations
+  );
 
-    return () => {};
+  useEffect(() => {
+    dispatch(fetchConversationsThunk());
   }, []);
 
   return (
     <Page>
-      <ConversationsSidebar conversations={conversations} />
+      <ConversationsSidebar conversations={conversation} />
       <Outlet />
     </Page>
   );

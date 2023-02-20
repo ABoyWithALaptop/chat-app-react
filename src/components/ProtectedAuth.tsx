@@ -8,7 +8,7 @@ type Props = {
 
 export const ProtectedRoute: FC<Props> = ({ children }) => {
   const location = useLocation();
-  const auth = useAuth();
+  const auth = useAuth(); //  * get user authentication and update to redux store
   console.log("protected");
 
   if (auth.loading) {

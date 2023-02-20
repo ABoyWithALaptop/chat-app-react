@@ -11,10 +11,13 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router";
 import { CreateConversationModal } from "../modals/CreateConversationModal";
 import { AuthContext } from "../../utils/context/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store";
 type Props = {
   conversations: Conversation[];
 };
 
+// * show the person receive message in the conversations (thats mean not you, the guy send message)
 export const showDisplayUser = (conversation: Conversation, user: User) => {
   return conversation.creator.id !== user?.id
     ? conversation.creator
@@ -23,7 +26,7 @@ export const showDisplayUser = (conversation: Conversation, user: User) => {
 export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
   const navigate = useNavigate();
   const [showModel, setShowModel] = useState(false);
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   const showShortMessage = (content: string) => {
     return content.length > 100 ? <>{content.slice(0, 99)}&hellip;</> : content;

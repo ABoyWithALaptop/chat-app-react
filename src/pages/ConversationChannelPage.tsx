@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { showDisplayUser } from "../components/conversation/ConversationsSidebar";
 import { MessagePanel } from "../components/messages/MessagePanel";
+import { RootState } from "../store";
 import { getConversationMessages, getConversationsById } from "../utils/api";
-import { AuthContext } from "../utils/context/AuthContext";
 import { SocketContext } from "../utils/context/SocketContext";
 import { ConversationChannelPageStyle } from "../utils/styles";
 import { Message, MessageEventPayload, User } from "../utils/types/types";
@@ -16,7 +17,7 @@ const addMessage = (
 };
 
 export const ConversationChannelPage = () => {
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const socket = useContext(SocketContext);
   const { id } = useParams();
   const [message, setMessage] = useState<Message[]>([]);

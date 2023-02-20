@@ -17,8 +17,8 @@ export const postRegisterUser = async (data: CreateUserParams) =>
 export const postLogging = async (data: UserCredential) =>
   axios.post(`${API_URL}/auth/login`, data, config);
 
-export const getAuthUser = () =>
-  axios.get<User>(`${API_URL}/auth/status`, config);
+export const getAuthUser = async () =>
+  await axios.get<User>(`${API_URL}/auth/status`, config);
 
 export const getConversations = () =>
   axios.get<Conversation[]>(`${API_URL}/conversations`, config);
@@ -29,7 +29,7 @@ export const getConversationMessages = (id: number) =>
 export const createConversation = (
   createConversationParam: createConversationParams
 ) => {
-  axios.post(
+  return axios.post(
     `${API_URL}/messages/firstMessage`,
     createConversationParam,
     config
@@ -41,4 +41,9 @@ export const getConversationsById = (id: number) => {
 
 export const postMessage = (postMessage: CreateMessageParams) => {
   return axios.post(`${API_URL}/messages`, { ...postMessage }, config);
+};
+
+// ? will add user info later for later now just get list of all users
+export const getFriendList = (params?: any) => {
+  return axios.post<User[]>(`${API_URL}/users/`, { ...params }, config);
 };

@@ -1,17 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuthUser } from "../api";
-import { User } from "../types/types";
-import { AuthContext } from "../context/AuthContext";
+
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
+import { fetchUserFriendList, updateUser } from "../../store/userSlice";
 
 export function useAuth() {
   const [loading, setLoading] = useState(true);
-  const { user, updateAuthUser } = useContext(AuthContext);
   const controller = new AbortController();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   useEffect(() => {
-    getAuthUser()
+    getAuthUser() // * get status of user
       .then(({ data }) => {
-        updateAuthUser(data);
+        dispatch(updateUser(data));
+        dispatch(fetchUserFriendList());
         setTimeout(() => setLoading(false), 1000);
       })
       .catch((err) => {

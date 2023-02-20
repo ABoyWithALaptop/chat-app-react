@@ -6,9 +6,7 @@ import { ConversationPage } from "./pages/ConversationPage";
 import { ConversationChannelPage } from "./pages/ConversationChannelPage";
 import { ConversationPanel } from "./components/conversation/ConversationPanel";
 import { ProtectedRoute } from "./components/ProtectedAuth";
-import { AuthContext } from "./utils/context/AuthContext";
-import { PropsWithChildren, useState } from "react";
-import { Conversation, User } from "./utils/types/types";
+import { PropsWithChildren } from "react";
 // import { ConversationContext } from "./utils/context/ConversationContext";
 import { socket, SocketContext } from "./utils/context/SocketContext";
 import { Socket } from "socket.io-client";
@@ -16,15 +14,12 @@ import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./store";
 
 type Props = {
-  user?: User;
-  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   socket: Socket;
 };
 
 function App() {
-  const [user, setUser] = useState<User>();
   return (
-    <AppWithProvider user={user} setUser={setUser} socket={socket}>
+    <AppWithProvider socket={socket}>
       <div className="App">
         <Switch>
           <Routes>
@@ -45,26 +40,13 @@ function App() {
         </Switch>
       </div>
     </AppWithProvider>
-    // <AuthContext.Provider value={{ user, updateAuthUser: setUser }}>
-    //   <SocketContext.Provider value={socket}>
-
-    //   </SocketContext.Provider>
-    // </AuthContext.Provider>
   );
 }
 
-function AppWithProvider({
-  children,
-  user,
-  setUser,
-}: PropsWithChildren & Props) {
+function AppWithProvider({ children, socket }: PropsWithChildren & Props) {
   return (
     <ReduxProvider store={store}>
-      <AuthContext.Provider value={{ user, updateAuthUser: setUser }}>
-        <SocketContext.Provider value={socket}>
-          {children}
-        </SocketContext.Provider>
-      </AuthContext.Provider>
+      <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
     </ReduxProvider>
   );
 }
