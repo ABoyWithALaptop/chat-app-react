@@ -14,7 +14,7 @@ import { AuthContext } from "../../utils/context/AuthContext";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 type Props = {
-  conversations: Conversation[];
+  conversations: Map<number, Conversation>;
 };
 
 // * show the person receive message in the conversations (thats mean not you, the guy send message)
@@ -43,30 +43,32 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
           </div>
         </ConversationSidebarHeader>
         <ConversationSidebarContainer>
-          {conversations.map((conversation) => {
-            const guess = showDisplayUser(conversation, user!);
+          {Array.from(conversations, ([id, conversation]) => conversation).map(
+            (conversation) => {
+              const guess = showDisplayUser(conversation, user!);
 
-            return (
-              <ConversationSidebarItem
-                onClick={() => {
-                  navigate(`/conversations/${conversation.id}`);
-                }}
-                key={conversation.id}
-              >
-                <div className={styles.conversationAvatar}></div>
-                <div className={styles.info}>
-                  <span className={styles.conversationName}>
-                    {" "}
-                    {`${guess.lastName}  ${guess.firstName}`}
-                  </span>
-                  <span className={styles.conversationLastMessage}>
-                    {" "}
-                    {showShortMessage(conversation.lastMessageSent.content)}
-                  </span>
-                </div>
-              </ConversationSidebarItem>
-            );
-          })}
+              return (
+                <ConversationSidebarItem
+                  onClick={() => {
+                    navigate(`/conversations/${conversation.id}`);
+                  }}
+                  key={conversation.id}
+                >
+                  <div className={styles.conversationAvatar}></div>
+                  <div className={styles.info}>
+                    <span className={styles.conversationName}>
+                      {" "}
+                      {`${guess.lastName}  ${guess.firstName}`}
+                    </span>
+                    <span className={styles.conversationLastMessage}>
+                      {" "}
+                      {showShortMessage(conversation.lastMessageSent.content)}
+                    </span>
+                  </div>
+                </ConversationSidebarItem>
+              );
+            }
+          )}
         </ConversationSidebarContainer>
       </ConversationSidebarStyle>
     </>

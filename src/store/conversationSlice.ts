@@ -4,11 +4,11 @@ import { Conversation, conversationDetail } from "../utils/types/types";
 import { getConversations } from "../utils/api";
 
 export interface ConversationState {
-  conversations: Conversation[];
+  conversations: Map<number, Conversation>;
 }
 
 const initialState: ConversationState = {
-  conversations: [],
+  conversations: new Map<number, Conversation>(),
 };
 
 export const fetchConversationsThunk = createAsyncThunk(
@@ -27,15 +27,19 @@ export const conversationsSlice = createSlice({
   reducers: {
     addConversation: (state, action: PayloadAction<Conversation>) => {
       console.log("addConversation");
-      state.conversations.push(action.payload);
+      console.log("action payload from addConversation", action.payload);
+      state.conversations.set(action.payload.id, action.payload);
     },
   },
   extraReducers(builder) {
     builder.addCase(
       fetchConversationsThunk.fulfilled,
       (state, action: PayloadAction<Conversation[]>) => {
-        console.log("action", action);
-        state.conversations = action.payload;
+        console.log("action payload from fetch conversation", action.payload);
+        const map = new Map<number, Conversation>(
+          action.payload.map((obj) => [obj.id, obj])
+        );
+        state.conversations = map;
       }
     );
   },
