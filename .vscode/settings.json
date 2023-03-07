@@ -2,5 +2,5 @@
   "dotenv.enableAutocloaking": false,
   "docwriter.progress.trackFunctions": false,
   "docwriter.progress.trackMethods": false,
-  "docwriter.style": "Auto-detect"
+  "docwriter.style": "Auto-detect",
 }

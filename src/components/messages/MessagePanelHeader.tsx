@@ -8,6 +8,8 @@ type props = {
 
 export const MessagePanelHeader: FC<props> = ({ recipient }) => {
   return (
-    <MessagePanelHeaderStyle>{`${recipient?.lastName} ${recipient?.firstName}`}</MessagePanelHeaderStyle>
+    <MessagePanelHeaderStyle>
+      {recipient ? `${recipient?.lastName} ${recipient?.firstName}` : ""}
+    </MessagePanelHeaderStyle>
   );
 };

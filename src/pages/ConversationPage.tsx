@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useParams } from "react-router";
 import { ConversationsSidebar } from "../components/conversation/ConversationsSidebar";
@@ -13,6 +13,7 @@ export const ConversationPage = () => {
   );
 
   useEffect(() => {
+    console.log("fetch in conversation page");
     dispatch(fetchConversationsThunk());
   }, []);
 

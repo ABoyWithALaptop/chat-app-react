@@ -1,37 +1,56 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useOutletContext, useParams } from "react-router";
 import { showDisplayUser } from "../components/conversation/ConversationsSidebar";
 import { MessagePanel } from "../components/messages/MessagePanel";
-import { RootState } from "../store";
+import { AppDispatch, RootState } from "../store";
+import {
+  addMessage,
+  fetchConversationsThunk,
+  fetchMessagesThunk,
+} from "../store/conversationSlice";
 import { getConversationMessages, getConversationsById } from "../utils/api";
 import { SocketContext } from "../utils/context/SocketContext";
 import { ConversationChannelPageStyle } from "../utils/styles";
 import { Message, MessageEventPayload, User } from "../utils/types/types";
 
-const addMessage = (
-  setState: React.Dispatch<React.SetStateAction<Message[]>>,
-  message: Message
-) => {
-  setState((prev) => [message, ...prev]);
-};
+// const addMessage = (
+//   setState: React.Dispatch<React.SetStateAction<Message[]>>,
+//   message: Message
+// ) => {
+//   setState((prev) => [message, ...prev]);
+// };
 
 export const ConversationChannelPage = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const socket = useContext(SocketContext);
   const { id } = useParams();
-  const [message, setMessage] = useState<Message[]>([]);
   const [recipient, setRecipient] = useState<User>();
+  const idConversation = parseInt(id!);
+  const conversation = useSelector(
+    (state: RootState) => state.conversation.conversations
+  )[idConversation - 1];
+  const dispatch = useDispatch<AppDispatch>();
+  console.log("rendering");
+
   useEffect(() => {
-    getConversationMessages(parseInt(id!)).then(({ data }) => {
-      setMessage(data);
-    });
-    getConversationsById(parseInt(id!)).then(({ data }) => {
-      setRecipient(data.recipient);
-      const reciptPerson = showDisplayUser(data, user!);
-      setRecipient(reciptPerson);
-    });
+    (async () => {
+      if (conversation === undefined) {
+        console.log("if statement");
+        await dispatch(fetchConversationsThunk());
+      }
+      dispatch(fetchMessagesThunk(idConversation));
+    })();
   }, [id]);
+
+  useEffect(() => {
+    if (conversation !== undefined) {
+      // dispatch(fetchMessagesThunk(idConversation));
+      const reciptPerson = showDisplayUser(conversation!, user!);
+      console.log("reciptPerson: ", reciptPerson);
+      setRecipient(reciptPerson);
+    }
+  }, [conversation]);
 
   useEffect(() => {
     // console.log(socket);
@@ -39,7 +58,8 @@ export const ConversationChannelPage = () => {
     socket.on("onMessage", (payload: MessageEventPayload) => {
       console.log("Message received");
       const { conversation, ...message } = payload;
-      addMessage(setMessage, payload);
+      // addMessage(setMessage, payload);
+      dispatch(addMessage(payload));
     });
     return () => {
       socket.off("connected");
@@ -49,7 +69,11 @@ export const ConversationChannelPage = () => {
 
   return (
     <ConversationChannelPageStyle>
-      <MessagePanel messages={message} recipient={recipient!}></MessagePanel>
+      <MessagePanel
+        // messages={messages ? messages : []}
+        messages={conversation?.messages}
+        recipient={recipient}
+      ></MessagePanel>
     </ConversationChannelPageStyle>
   );
 };
