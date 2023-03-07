@@ -54,7 +54,6 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
 
 export const MessageContainer: FC<Props> = ({ messages }) => {
   const user = useSelector((state: RootState) => state.user.currentUser);
-
   /* A function that takes in an array of messages and returns a new array of messages jsx elements. */
   const formatMessage = (messages: Message[]) => {
     return messages.map((m: Message, i: number) => {

@@ -23,7 +23,7 @@ export const MessagePanel: FC<Props> = ({ messages, recipient }) => {
   // const message = useSelector(
   //   (state: RootState) => state.conversation.conversations
   // );
-  const { id } = useParams()!;
+  const { id } = useParams();
   const idNumber = parseInt(id!);
   const sendMessage = async (mess: React.FormEvent<HTMLFormElement>) => {
     mess.preventDefault();
