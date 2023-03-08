@@ -4,6 +4,7 @@ export type Conversation = {
   recipient: User;
   lastMessageSent: Message;
   createdAt: Date;
+  messages?: Message[];
 };
 export type conversationDetail = {
   id: number;
@@ -53,4 +54,8 @@ export type MessageEventPayload = {
 export type CreateMessageParams = {
   content: string;
   conversationId: number;
+};
+export type MessagesFetchPayloadType = {
+  conversationId: number;
+  messages: Message[];
 };
