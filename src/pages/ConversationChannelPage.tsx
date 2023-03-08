@@ -29,7 +29,7 @@ export const ConversationChannelPage = () => {
   const idConversation = parseInt(id!);
   const conversation = useSelector(
     (state: RootState) => state.conversation.conversations
-  )[idConversation - 1];
+  ).find((x) => x.id == idConversation);
   const dispatch = useDispatch<AppDispatch>();
   console.log("rendering");
 

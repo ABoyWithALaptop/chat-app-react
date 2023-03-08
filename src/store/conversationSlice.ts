@@ -49,12 +49,15 @@ export const conversationsSlice = createSlice({
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       console.log("addMessage");
-      const idConversation = action.payload.conversation.id - 1;
-      const curConversation = state.conversations[idConversation];
+      const idConversation = action.payload.conversation.id;
+      const indexCurConversation = state.conversations.findIndex(
+        (x) => x.id == idConversation
+      );
+      const curConversation = state.conversations[indexCurConversation];
       if (curConversation) {
         curConversation.messages!.unshift(action.payload);
         curConversation.lastMessageSent = action.payload;
-        state.conversations[idConversation] = curConversation;
+        state.conversations[indexCurConversation] = curConversation;
       } else {
         console.warn("cant not sending message right now, please try again");
       }
@@ -82,12 +85,16 @@ export const conversationsSlice = createSlice({
         fetchMessagesThunk.fulfilled,
         (state, action: PayloadAction<MessagesFetchPayloadType>) => {
           const { conversationId, messages } = action.payload;
-          const indexConversation = conversationId - 1;
+          // const indexConversation = conversationId - 1;
           console.log("action payload from fetch messages", action.payload);
-          const curConversation = state.conversations[indexConversation];
+          const indexCurConversation = state.conversations.findIndex(
+            (x) => x.id == conversationId
+          );
+          const curConversation = state.conversations[indexCurConversation];
+          console.log("curConversation", curConversation);
           if (curConversation) {
             curConversation.messages = messages;
-            state.conversations[indexConversation].messages = messages;
+            state.conversations[indexCurConversation].messages = messages;
           } else {
             console.log("current conversation is not found", curConversation);
           }
