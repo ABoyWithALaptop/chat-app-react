@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   InputContainer,
@@ -16,12 +16,16 @@ export const RegisterForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<CreateUserParams>();
+  const navigate = useNavigate();
 
   console.log(errors);
   const onSubmit = async (data: CreateUserParams) => {
     console.log(data);
     try {
+      data.email = data.email.trim();
+      data.passWord = data.passWord.trim();
       await postRegisterUser(data);
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }

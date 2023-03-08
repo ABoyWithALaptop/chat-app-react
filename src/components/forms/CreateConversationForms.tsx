@@ -1,4 +1,4 @@
-import { SyntheticEvent } from "react";
+import { FC, SyntheticEvent } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createConversation } from "../../utils/api";
 import {
@@ -10,15 +10,31 @@ import {
 } from "../../utils/styles";
 import { createConversationParams } from "../../utils/types/types";
 import styles from "./index.module.scss";
-export const CreateConversationForm = () => {
-  const { register, handleSubmit } = useForm<createConversationParams>();
+type conversationCreateFormField = {
+  recipientId: string;
+  message: string;
+};
+type props = {
+  setShowModel: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export const CreateConversationForm: FC<props> = ({ setShowModel }) => {
+  const { register, handleSubmit } = useForm<conversationCreateFormField>();
 
-  const onSubmit: SubmitHandler<createConversationParams> = (data) => {
+  const onSubmit: SubmitHandler<conversationCreateFormField> = async (data) => {
     // e.preventDefault();
-    console.log("submitted");
-    console.log("data", data);
-    console.log(typeof data.recipientId);
-    createConversation(data);
+    try {
+      console.log("submitted");
+      console.log("data", data);
+      console.log(typeof data.recipientId);
+      const requestParams: createConversationParams = {
+        recipientId: parseInt(data.recipientId),
+        message: data.message,
+      };
+      await createConversation(requestParams);
+      setShowModel(false);
+    } catch (error) {
+      console.log("error from create conversation form", error);
+    }
   };
   return (
     <form
