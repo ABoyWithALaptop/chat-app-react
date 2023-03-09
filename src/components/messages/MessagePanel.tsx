@@ -8,39 +8,48 @@ import { MessagePanelHeader } from "./MessagePanelHeader";
 import { postMessage } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { fetchMessagesThunk } from "../../store/conversationSlice";
+import {
+  fetchConversationsThunk,
+  fetchMessagesThunk,
+} from "../../store/conversationSlice";
+import { showDisplayUser } from "../conversation/ConversationsSidebar";
 
-type Props = {
-  messages?: Message[];
-  recipient?: User;
-};
-
-export const MessagePanel: FC<Props> = ({ messages, recipient }) => {
-  if (!messages) messages = [];
-  const [content, setContent] = useState("");
-  const dispatch = useDispatch<AppDispatch>();
-
-  // const message = useSelector(
-  //   (state: RootState) => state.conversation.conversations
-  // );
+export const MessagePanel: FC = () => {
+  // if (!messages) messages = [];
   const { id } = useParams();
-  const idNumber = parseInt(id!);
-  const sendMessage = async (mess: React.FormEvent<HTMLFormElement>) => {
-    mess.preventDefault();
-    if (!id || !content) throw new Error("Missing id or content");
-    const conversationId = idNumber;
-    try {
-      await postMessage({ conversationId, content: content });
-      setContent("");
-    } catch (error) {
-      console.log("error on sending message: ", error);
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const idConversation = parseInt(id!);
+  const dispatch = useDispatch<AppDispatch>();
+  const [recipient, setRecipient] = useState<User>();
+  const conversation = useSelector(
+    (state: RootState) => state.conversation.conversations
+  ).find((x) => x.id == idConversation);
+
+  useEffect(() => {
+    if (conversation !== undefined) {
+      // dispatch(fetchMessagesThunk(idConversation));
+      const reciptPerson = showDisplayUser(conversation!, user!);
+      console.log("reciptPerson: ", reciptPerson);
+      setRecipient(reciptPerson);
     }
-  };
+  }, [conversation]);
+  useEffect(() => {
+    (async () => {
+      if (conversation === undefined) {
+        console.log("if statement");
+        await dispatch(fetchConversationsThunk());
+      }
+      if (!conversation?.messages) dispatch(fetchMessagesThunk(idConversation));
+    })();
+  }, [id]);
+
   return (
     <MessagePanelStyle>
       <MessagePanelHeader recipient={recipient}></MessagePanelHeader>
       <MessagePanelBodyStyle>
-        <MessageContainer messages={messages} />
+        <MessageContainer
+          messages={conversation?.messages ? conversation.messages : []}
+        />
         <MessageInputField />
       </MessagePanelBodyStyle>
     </MessagePanelStyle>
