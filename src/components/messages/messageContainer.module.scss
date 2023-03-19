@@ -1,3 +1,6 @@
+.inputForm {
+  width:100%
+}
 .time {
   color: #000;
   font-size: 12px;
@@ -9,7 +12,8 @@
   background-color: #f8ede39a;
   border-radius: 10px;
   opacity: 0;
-  transition:  opacity 0.15s linear
+  transition:  opacity 0.15s linear;
+  height: 21px
 }
 .showNoti {
   visibility: visible;

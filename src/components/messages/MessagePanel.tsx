@@ -5,7 +5,6 @@ import { Message, User } from "../../utils/types/types";
 import { MessageContainer } from "./MessageContainer";
 import { MessageInputField } from "./MessageInputField";
 import { MessagePanelHeader } from "./MessagePanelHeader";
-import { postMessage } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import {

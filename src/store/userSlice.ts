@@ -15,7 +15,6 @@ export const fetchUserFriendList = createAsyncThunk(
   "user/fetchFriendList",
   async (thunkAPI) => {
     const { data } = await getFriendList();
-    console.log("data in thunk friendList user", data);
     return data;
   }
 );
@@ -26,7 +25,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     updateUser: (state, action: PayloadAction<User>) => {
-      console.log("updateUser");
       state.currentUser = action.payload;
     },
     addFriends: (state, action: PayloadAction<User>) => {
@@ -38,7 +36,6 @@ export const userSlice = createSlice({
     builder.addCase(
       fetchUserFriendList.fulfilled,
       (state, action: PayloadAction<User[]>) => {
-        console.log("action", action.payload);
         state.friendList = action.payload;
       }
     );

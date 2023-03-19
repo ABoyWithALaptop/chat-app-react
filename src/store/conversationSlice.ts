@@ -48,16 +48,20 @@ export const conversationsSlice = createSlice({
       state.conversations.push(action.payload);
     },
     addMessage: (state, action: PayloadAction<Message>) => {
-      console.log("addMessage");
+      console.log("addMessage", action);
       const idConversation = action.payload.conversation.id;
       const indexCurConversation = state.conversations.findIndex(
-        (x) => x.id == idConversation
+        (x) => x.id === idConversation
       );
       const curConversation = state.conversations[indexCurConversation];
       if (curConversation) {
-        curConversation.messages!.unshift(action.payload);
+        curConversation.messages?.unshift(action.payload);
         curConversation.lastMessageSent = action.payload;
-        state.conversations[indexCurConversation] = curConversation;
+        const newConversations = state.conversations.filter(
+          (x) => x.id !== idConversation
+        );
+        newConversations.unshift(curConversation);
+        state.conversations = newConversations;
       } else {
         console.warn("cant not sending message right now, please try again");
       }

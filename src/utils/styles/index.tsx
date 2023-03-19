@@ -219,10 +219,12 @@ export const MessageInputFieldStyle = styled.input`
   resize: none;
   width: 100%;
   box-sizing: border-box;
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     display: none;
-  }
-
+  } */
+  /* &:after{
+    content: ${(props) => props.value};
+  } */
   /* height: 100px; */
 `;
 
@@ -276,6 +278,11 @@ export const MessageItemContent = styled.div<MessageItemContentProps>`
     max-width: 70%;
     padding: ${paddingMessageDetail};
     border-radius: 10px;
+    word-wrap: break-word;
+  }
+  span:nth-child(2) {
+    /* line-height: 100%; */
+    /* color: red; */
   }
 `;
 

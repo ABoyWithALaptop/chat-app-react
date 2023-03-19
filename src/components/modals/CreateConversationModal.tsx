@@ -38,7 +38,7 @@ export const CreateConversationModal: FC<Props> = ({ setShowModel }) => {
           />
         </ModelHeader>
         <ModalContentBody>
-          <CreateConversationForm />
+          <CreateConversationForm setShowModel={setShowModel} />
         </ModalContentBody>
       </ModalContainer>
     </OverlayStyle>

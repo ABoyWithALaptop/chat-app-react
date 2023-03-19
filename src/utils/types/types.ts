@@ -6,13 +6,6 @@ export type Conversation = {
   createdAt: Date;
   messages?: Message[];
 };
-export type conversationDetail = {
-  id: number;
-  creator: User;
-  recipient: User;
-  message: Message[];
-  lastMessageSent: Message;
-};
 
 export type CreateUserParams = {
   email: string;
