@@ -30,8 +30,8 @@ export const getConversationMessages = (id: number) =>
 export const createConversation = (
   createConversationParam: createConversationParams
 ) => {
-  return axios.post(
-    `${API_URL}/messages/firstMessage`,
+  return axios.post<Conversation>(
+    `${API_URL}/conversations`,
     createConversationParam,
     config
   );

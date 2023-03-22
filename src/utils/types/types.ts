@@ -2,8 +2,8 @@ export type Conversation = {
   id: number;
   creator: User;
   recipient: User;
-  lastMessageSent: Message;
-  createdAt: Date;
+  lastMessageSent?: Message;
+  createdAt: string;
   messages?: Message[];
 };
 
@@ -28,7 +28,7 @@ export type User = {
 export type Message = {
   id: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   author: User;
   conversation: Conversation;
 };
@@ -38,7 +38,7 @@ export type createConversationParams = {
 };
 export type MessageEventPayload = {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   conversation: Conversation;
   author: User;
   content: string;

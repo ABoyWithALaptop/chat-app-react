@@ -38,14 +38,32 @@ export const fetchMessagesThunk = createAsyncThunk(
     return data;
   }
 );
-
+const compareTimeCreated = (a: string, b: string) => {
+  const dateA = new Date(a);
+  const dateB = new Date(b);
+  if (dateA < dateB) return 1;
+  if (dateA > dateB) return -1;
+  return 0;
+};
+const sortConversationByLastModified = (conversations: Conversation[]) => {
+  conversations.sort((a, b) => {
+    const timeA = a.lastMessageSent?.createdAt || a.createdAt;
+    const timeB = b.lastMessageSent?.createdAt || b.createdAt;
+    const sorted = compareTimeCreated(timeA, timeB);
+    return sorted;
+  });
+  return conversations;
+};
 /* Creating a slice of the state. */
 export const conversationsSlice = createSlice({
   name: "conversations",
   initialState,
   reducers: {
     addConversation: (state, action: PayloadAction<Conversation>) => {
-      state.conversations.push(action.payload);
+      console.log("addConversation", action);
+      const curConversations = state.conversations;
+      curConversations.unshift(action.payload);
+      state.conversations = curConversations;
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       console.log("addMessage", action);
@@ -74,6 +92,7 @@ export const conversationsSlice = createSlice({
         (state, action: PayloadAction<Conversation[]>) => {
           console.log("action payload from fetch conversation", action.payload);
           if (state.conversations.length == action.payload.length) return;
+
           const messArr = state.conversations.map(
             (conversation) => conversation.messages
           );
@@ -83,6 +102,9 @@ export const conversationsSlice = createSlice({
               conversation.messages = messArr[index];
             });
           }
+          const sorted = sortConversationByLastModified(state.conversations);
+          console.log("sorted", sorted);
+          state.conversations = sorted;
         }
       )
       .addCase(
