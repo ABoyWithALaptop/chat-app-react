@@ -29,13 +29,10 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
   const showShortMessage = (message: Message) => {
-    return (
-      (message.author.id === user?.id ? " You: " : "") +
-      (message.content.length > 100 ? (
-        <>{message.content.slice(0, 99)}&hellip;</>
-      ) : (
-        message.content
-      ))
+    return message.content.length > 33 ? (
+      <>{message.content.slice(0, 33)}&hellip;</>
+    ) : (
+      message.content
     );
   };
 
@@ -67,7 +64,9 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
                     {`${guess.lastName}  ${guess.firstName}`}
                   </span>
                   <span className={styles.conversationLastMessage}>
-                    {" "}
+                    {conversation?.lastMessageSent?.author.id === user?.id
+                      ? " You: "
+                      : ""}
                     {conversation.lastMessageSent
                       ? showShortMessage(conversation.lastMessageSent)
                       : ""}

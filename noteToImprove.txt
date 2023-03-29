@@ -1,0 +1,1 @@
+change short message from function js to css class ( if message overflows the box then hidden it and set text-overflow: ellipsis)

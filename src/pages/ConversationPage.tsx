@@ -21,6 +21,7 @@ export const ConversationPage = () => {
 
   useEffect(() => {
     console.log("fetch in conversation page");
+    socket.emit("joinConversations");
     dispatch(fetchConversationsThunk());
     socket.on("newConversation", (payload: Conversation) => {
       console.log("newConversation received", payload);

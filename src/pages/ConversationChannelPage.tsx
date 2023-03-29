@@ -14,6 +14,7 @@ export const ConversationChannelPage = () => {
 
   useEffect(() => {
     // console.log(socket);
+    socket.emit("joinConversations");
     socket.on("connected", () => console.log("connected"));
     socket.on("onMessage", (payload: MessageEventPayload) => {
       console.log("Message received");
