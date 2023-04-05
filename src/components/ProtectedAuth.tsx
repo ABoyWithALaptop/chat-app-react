@@ -17,10 +17,14 @@ export const ProtectedRoute: FC<Props> = ({ children }) => {
     return <div>Loading</div>;
   } else {
     if (!auth.user) {
+      socket.disconnect();
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>
       );
     } else {
+      if (!socket.connected) {
+        socket.connect();
+      }
       socket.emit("joinConversations");
       return <>{children}</>;
     }
