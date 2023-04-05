@@ -1,5 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { Navigate, useLocation } from "react-router";
+import { SocketContext } from "../utils/context/SocketContext";
 import { useAuth } from "../utils/hooks/useAuth";
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 
 export const ProtectedRoute: FC<Props> = ({ children }) => {
   const location = useLocation();
+  const socket = useContext(SocketContext);
   const auth = useAuth(); //  * get user authentication and update to redux store
   console.log("protected");
 
@@ -18,6 +20,9 @@ export const ProtectedRoute: FC<Props> = ({ children }) => {
       return (
         <Navigate to="/login" state={{ from: location }} replace></Navigate>
       );
-    } else return <>{children}</>;
+    } else {
+      socket.emit("joinConversations");
+      return <>{children}</>;
+    }
   }
 };

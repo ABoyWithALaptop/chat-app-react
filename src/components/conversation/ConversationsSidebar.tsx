@@ -8,10 +8,9 @@ import { TbEdit } from "react-icons/tb";
 import { FC, useContext, useState } from "react";
 import { Conversation, Message, User } from "../../utils/types/types";
 import styles from "./index.module.scss";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { CreateConversationModal } from "../modals/CreateConversationModal";
-import { AuthContext } from "../../utils/context/AuthContext";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 type Props = {
   conversations: Conversation[];
@@ -27,6 +26,10 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
   const navigate = useNavigate();
   const [showModel, setShowModel] = useState(false);
   const user = useSelector((state: RootState) => state.user.currentUser);
+  const { id } = useParams();
+  const [activeSidebar, setActiveSidebar] = useState<number | null>(
+    id ? parseInt(id) : null
+  );
 
   const showShortMessage = (message: Message) => {
     return message.content.length > 33 ? (
@@ -47,15 +50,16 @@ export const ConversationsSidebar: FC<Props> = ({ conversations }) => {
           </div>
         </ConversationSidebarHeader>
         <ConversationSidebarContainer>
-          {conversations.map((conversation) => {
+          {conversations.map((conversation, index) => {
             const guess = showDisplayUser(conversation, user!);
-
             return (
               <ConversationSidebarItem
                 onClick={() => {
+                  setActiveSidebar(conversation.id);
                   navigate(`/conversations/${conversation.id}`);
                 }}
                 key={conversation.id}
+                active={conversation.id == activeSidebar ? true : false}
               >
                 <div className={styles.conversationAvatar}></div>
                 <div className={styles.info}>

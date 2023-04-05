@@ -3,6 +3,7 @@ import {
   InputContainerPageProps,
   MessageItemContentProps,
   PageProps,
+  sideBarProps,
 } from "./styleTypes";
 
 export const DARK = "#131313";
@@ -76,6 +77,7 @@ export const Page = styled.div<PageProps>`
 export const ConversationSidebarStyle = styled.aside`
   background-color: #1a1a1a;
   border-right: 1px solid #5454543d;
+  /* bac */
   width: ${SIDEBAR_WIDTH}px;
   height: 100%;
   position: absolute;
@@ -108,13 +110,13 @@ export const ConversationChannelPageStyle = styled.div`
 `;
 export const ConversationSidebarContainer = styled.div``;
 
-export const ConversationSidebarItem = styled.div`
+export const ConversationSidebarItem = styled.div<sideBarProps>`
   display: flex;
   align-items: center;
   gap: 1.5rem;
   padding: 1rem 2rem;
   border-bottom: 1px solid #5454543d;
-  background-color: #151515;
+  background-color: ${(props) => (props.active && "#1f1f1f") || "#151515"};
 `;
 
 export const OverlayStyle = styled.div`
