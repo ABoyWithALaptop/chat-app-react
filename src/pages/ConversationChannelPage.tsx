@@ -11,10 +11,8 @@ import { MessageEventPayload } from "../utils/types/types";
 export const ConversationChannelPage = () => {
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
-
   useEffect(() => {
     // console.log(socket);
-    socket.emit("joinConversations");
     socket.on("connected", () => console.log("connected"));
     socket.on("onMessage", (payload: MessageEventPayload) => {
       console.log("Message received");
