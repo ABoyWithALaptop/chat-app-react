@@ -12,3 +12,6 @@ export type MessageItemContentProps = Partial<{
   padding: string;
   direction: string;
 }>;
+export type sideBarProps = Partial<{
+  active: boolean;
+}>;
