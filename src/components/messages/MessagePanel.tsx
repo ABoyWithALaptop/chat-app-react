@@ -23,24 +23,19 @@ export const MessagePanel: FC = () => {
   const conversation = useSelector(
     (state: RootState) => state.conversation.conversations
   ).find((x) => x.id == idConversation);
+  const fetchingStatus = useSelector(
+    (state: RootState) => state.conversation.fetching
+  );
 
   useEffect(() => {
-    if (conversation !== undefined) {
-      // dispatch(fetchMessagesThunk(idConversation));
+    console.log("fetchingStatus: ", fetchingStatus);
+    if (fetchingStatus) {
       const reciptPerson = showDisplayUser(conversation!, user!);
       console.log("reciptPerson: ", reciptPerson);
       setRecipient(reciptPerson);
-    }
-  }, [conversation]);
-  useEffect(() => {
-    (async () => {
-      if (conversation === undefined) {
-        console.log("if statement");
-        await dispatch(fetchConversationsThunk());
-      }
       if (!conversation?.messages) dispatch(fetchMessagesThunk(idConversation));
-    })();
-  }, [id]);
+    }
+  }, [id, fetchingStatus]);
 
   return (
     <MessagePanelStyle>

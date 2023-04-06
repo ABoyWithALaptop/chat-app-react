@@ -1,6 +1,8 @@
-import userEvent from "@testing-library/user-event";
 import React, { FC, useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { AppDispatch, RootState } from "../../store";
+import { updateUserTyping } from "../../store/typingStatusSlice";
 import { postMessage } from "../../utils/api";
 import { SocketContext } from "../../utils/context/SocketContext";
 import {
@@ -31,22 +33,48 @@ const Typing: FC<props> = (props) => {
 
 export const MessageInputField: FC = () => {
   const [content, setContent] = useState("");
-  const [userType, setUserType] = useState<User>();
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout>();
   const socket = useContext(SocketContext);
   const { id } = useParams()!;
   const idNumber = parseInt(id!);
+  const conversation = useSelector(
+    (state: RootState) => state.typingStatus.conversationList
+  ).find((x) => x.conversationId === idNumber);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    socket.on("userType", (user: User) => {
-      setUserType(user);
+    socket.on("userType", (user: User[] | null) => {
+      if (user) {
+        dispatch(
+          updateUserTyping({ conversationId: idNumber, typingUsers: user })
+        );
+      }
+      console.log("conversation", conversation);
+      console.log("alo", user);
     });
+    socket.on("userNotTyping", (user: User[]) => {
+      const userStillType = [...user];
+      console.log("user still type", userStillType);
+      dispatch(
+        updateUserTyping({
+          conversationId: idNumber,
+          typingUsers: userStillType,
+        })
+      );
+    });
+    return () => {
+      socket.off("userType");
+      socket.off("userNotTyping");
+    };
   }, []);
+
   const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value);
     if (event.target.value.length > 0) {
       if (typingTimeout) clearTimeout(typingTimeout);
       const newTimeout = setTimeout(() => {
+        console.log("not typing");
         socket.emit("notTyping", idNumber);
       }, 1000);
       setTypingTimeout(newTimeout);
@@ -73,8 +101,16 @@ export const MessageInputField: FC = () => {
           <MessageInputFieldStyle value={content} onChange={handleTyping} />
         </form>
       </MessageInputContainerStyle>
-      {userType?.lastName ? (
-        <Typing username={userType.lastName} class={styles.userTyping} />
+      {conversation?.typingUsers && conversation?.typingUsers.length > 0 ? (
+        <Typing
+          username={conversation!.typingUsers
+            .map((user) => {
+              console.log("users", user);
+              return user.lastName;
+            })
+            .join(" and ")}
+          class={styles.userTyping}
+        />
       ) : null}
     </>
   );

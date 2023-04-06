@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import conversationReducer from "./conversationSlice";
+import typingStatusReducer from "./typingStatusSlice";
 import userReducer from "./userSlice";
 
 export const store = configureStore({
   reducer: {
     conversation: conversationReducer,
     user: userReducer,
+    typingStatus: typingStatusReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
