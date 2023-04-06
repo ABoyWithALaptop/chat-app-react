@@ -6,6 +6,8 @@ import {
   Message,
 } from "../utils/types/types";
 import { getConversationMessages, getConversations } from "../utils/api";
+import { AppDispatch, RootState } from ".";
+import { initialConversation } from "./typingStatusSlice";
 
 /**
  * Define a type for the slice state
@@ -15,18 +17,21 @@ import { getConversationMessages, getConversations } from "../utils/api";
 export interface ConversationState {
   conversations: Conversation[];
   loading: boolean;
+  fetching: boolean;
 }
 
 const initialState: ConversationState = {
   conversations: [],
   loading: false,
+  fetching: false,
 };
 
-export const fetchConversationsThunk = createAsyncThunk(
+export const fetchConversationsThunk = createAsyncThunk<Conversation[]>(
   "conversations/fetch",
-  async (thunkAPI) => {
+  async (_, thunkAPI) => {
     const { data } = await getConversations();
     console.log("data in thunk conversation", data);
+    thunkAPI.dispatch(initialConversation(data));
     return data;
   }
 );
@@ -61,9 +66,9 @@ export const conversationsSlice = createSlice({
   reducers: {
     addConversation: (state, action: PayloadAction<Conversation>) => {
       console.log("addConversation", action);
-      const curConversations = state.conversations;
+      const curConversations = [...state.conversations];
       curConversations.unshift(action.payload);
-      state.conversations = curConversations;
+      state.conversations = [...curConversations];
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       console.log("addMessage", action);
@@ -105,6 +110,7 @@ export const conversationsSlice = createSlice({
           const sorted = sortConversationByLastModified(state.conversations);
           console.log("sorted", sorted);
           state.conversations = sorted;
+          state.fetching = true;
         }
       )
       .addCase(
