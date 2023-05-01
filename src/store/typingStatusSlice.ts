@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createDraftSafeSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Conversation, User } from "../utils/types/types";
+import { RootState, store } from ".";
 
 export interface conversationTypingStatus {
   conversationId: number;
@@ -13,6 +14,7 @@ export interface TypingState {
 const initialState: TypingState = {
   conversationList: [],
 };
+
 /* Creating a slice of the state. */
 export const typingStatus = createSlice({
   name: "typingStatus",
@@ -22,6 +24,7 @@ export const typingStatus = createSlice({
       state,
       action: PayloadAction<conversationTypingStatus>
     ) => {
+      console.log("updateUserTyping", action.payload);
       let curStatus = [...state.conversationList];
       curStatus.forEach((conversation) => {
         if (conversation.conversationId === action.payload.conversationId) {
@@ -43,3 +46,17 @@ export const typingStatus = createSlice({
 export const { updateUserTyping, initialConversation } = typingStatus.actions;
 
 export default typingStatus.reducer;
+
+export const selectConversations = (state: RootState) =>
+  state.typingStatus.conversationList;
+
+export const selectConversationId = (state: RootState, id: number) => id;
+
+export const selectConversationById = createDraftSafeSelector(
+  [selectConversations, selectConversationId],
+  (conversations, id) => {
+    return conversations.find(
+      (conversation) => conversation.conversationId === id
+    );
+  }
+);
