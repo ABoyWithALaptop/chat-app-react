@@ -7,6 +7,7 @@ import {
   CreateUserParams,
   User,
   UserCredential,
+  deleteMessageParams,
 } from "./types/types";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -25,7 +26,10 @@ export const getConversations = () =>
   axios.get<Conversation[]>(`${API_URL}/conversations`, config);
 
 export const getConversationMessages = (id: number) =>
-  axios.get<MessagesFetchPayloadType>(`${API_URL}/messages/${id}`, config);
+  axios.get<MessagesFetchPayloadType>(
+    `${API_URL}/conversations/${id}/messages`,
+    config
+  );
 
 export const createConversation = (
   createConversationParam: createConversationParams
@@ -41,10 +45,25 @@ export const getConversationsById = (id: number) => {
 };
 
 export const postMessage = (postMessage: CreateMessageParams) => {
-  return axios.post(`${API_URL}/messages`, { ...postMessage }, config);
+  return axios.post(
+    `${API_URL}/conversations/${postMessage.conversationId}/messages`,
+    { ...postMessage },
+    config
+  );
 };
 
 // ? will add user info later for later now just get list of all users
 export const getFriendList = (params?: any) => {
   return axios.post<User[]>(`${API_URL}/users/`, { ...params }, config);
+};
+
+export const getAllAvailableUsers = async () => {
+  return await axios.get<User[]>(`${API_URL}/users/availableUsers`, config);
+};
+
+export const deleteMessageById = async (param: deleteMessageParams) => {
+  return await axios.delete<{ id: number }>(
+    `${API_URL}/conversations/${param.conversationId}/messages/${param.messageId}`,
+    config
+  );
 };

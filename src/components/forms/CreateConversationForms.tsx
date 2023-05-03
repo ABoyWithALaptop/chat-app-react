@@ -1,6 +1,7 @@
-import { FC, SyntheticEvent } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { createConversation } from "../../utils/api";
+import { FC, SyntheticEvent, useState, useEffect } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import Select from "react-select";
+import { createConversation, getAllAvailableUsers } from "../../utils/api";
 import {
   Button,
   InputContainer,
@@ -8,29 +9,58 @@ import {
   InputLabel,
   TextFieldStyle,
 } from "../../utils/styles";
-import { createConversationParams } from "../../utils/types/types";
+import { User, createConversationParams } from "../../utils/types/types";
 import styles from "./index.module.scss";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { createConversationThunk } from "../../store/conversationSlice";
+import { SearchDropdown } from "./searchDropdown";
+
 type conversationCreateFormField = {
-  recipientId: string;
+  recipientEmail: string;
   message: string;
 };
 type props = {
   setShowModel: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const CreateConversationForm: FC<props> = ({ setShowModel }) => {
-  const { register, handleSubmit } = useForm<conversationCreateFormField>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    setValue,
+  } = useForm<conversationCreateFormField>();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [listAvailableUsers, setListAvailableUsers] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  useEffect(() => {
+    getAllAvailableUsers().then(({ data }) => {
+      const formatArray = data.map((user) => ({
+        value: user.email,
+        label: user.email,
+      }));
+      console.log("format array", formatArray);
+      setListAvailableUsers(formatArray);
+    });
+  }, []);
 
   const onSubmit: SubmitHandler<conversationCreateFormField> = async (data) => {
     // e.preventDefault();
     try {
       console.log("submitted");
       console.log("data", data);
-      console.log(typeof data.recipientId);
+      console.log(typeof data.recipientEmail);
       const requestParams: createConversationParams = {
-        recipientId: parseInt(data.recipientId),
+        recipientEmail: data.recipientEmail,
         message: data.message,
       };
-      await createConversation(requestParams);
+      console.log("request params", requestParams);
+      dispatch(createConversationThunk(requestParams));
+
       setShowModel(false);
     } catch (error) {
       console.log("error from create conversation form", error);
@@ -42,10 +72,14 @@ export const CreateConversationForm: FC<props> = ({ setShowModel }) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <section>
-        <InputContainer backgroundColor="#161616">
-          <InputLabel>Recipient</InputLabel>
-          <InputField {...register("recipientId")} />
-        </InputContainer>
+        <Controller
+          control={control}
+          name="recipientEmail"
+          rules={{ required: "Email is required" }}
+          render={({ field }) => (
+            <SearchDropdown options={listAvailableUsers} {...field} />
+          )}
+        />
       </section>
       <section>
         <InputContainer backgroundColor="#161616">
@@ -53,15 +87,7 @@ export const CreateConversationForm: FC<props> = ({ setShowModel }) => {
           <TextFieldStyle {...register("message")} />
         </InputContainer>
       </section>
-      <Button
-        type="submit"
-        // onClick={(e) => {
-        //   e.preventDefault();
-        //   // createConversation();
-        // }}
-      >
-        Create Conversations
-      </Button>
+      <Button type="submit">Create Conversations</Button>
     </form>
   );
 };
