@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import {
   InputContainerPageProps,
+  InputSearchResultItemStyleProps,
+  InputSearchResultStyleProps,
   MessageItemContentProps,
   PageProps,
   sideBarProps,
@@ -41,6 +43,36 @@ export const InputLabel = styled.label`
   margin: 4px 0;
 `;
 
+export const InputSearchResultItemStyle = styled.div<InputSearchResultItemStyleProps>`
+  padding: 12px 16px;
+  /* background-color: ${(props) => props.backgroundColor || `#7c7c7c3a`}; */
+  transition: all 0.5s linear;
+  background-color: inherit;
+  border: 1px solid #b6b6b63b;
+
+  &:hover {
+    border-radius: 10px;
+    cursor: pointer;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    background-color: #f1f0f081;
+    color: black;
+  }
+`;
+export const InputSearchResultStyle = styled.div<InputSearchResultStyleProps>`
+  background-color: #4b4b4b;
+  ${(props) =>
+    props.height !== "0" ? "border: 1px solid #b6b6b63b" : "border: 0"};
+  /* border: 1px solid #b6b6b63b; */
+  transition: all 0.5s linear;
+  position: absolute;
+  right: 0;
+  left: 0;
+  /* top: -10px; */
+  height: ${(props) => props.height || "auto"};
+
+  /* border-radius: 10px; */
+`;
 export const Button = styled.button`
   width: 100%;
   background-color: #2b09ff;
@@ -269,8 +301,10 @@ export const MessageItemContent = styled.div<MessageItemContentProps>`
   flex-direction: ${({ direction }) => direction};
 
   display: flex;
-  /* justify-content: space-between; */
+  gap: 1vw;
+  align-items: center;
   width: 100%;
+  height: 100%;
   span {
     padding: ${paddingMessageDetail};
   }
@@ -282,9 +316,11 @@ export const MessageItemContent = styled.div<MessageItemContentProps>`
     border-radius: 10px;
     word-wrap: break-word;
   }
-  span:nth-child(2) {
-    /* line-height: 100%; */
-    /* color: red; */
+  &:hover {
+    /* background-color: #fff; */
+    button {
+      visibility: visible;
+    }
   }
 `;
 

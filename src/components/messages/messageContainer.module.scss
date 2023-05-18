@@ -91,4 +91,11 @@
   background-color: #2e2e2e!important;
   
 }
-
+.modified {
+  text-decoration: line-through;
+  & span {
+    border: 1px solid #f8ede32d;
+    background-color: #00000000 !important;
+    transition: all 1s ease-in-out;
+  }
+}

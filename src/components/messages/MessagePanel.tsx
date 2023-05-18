@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { MessagePanelBodyStyle, MessagePanelStyle } from "../../utils/styles";
 import { Message, User } from "../../utils/types/types";
@@ -10,8 +10,11 @@ import { AppDispatch, RootState } from "../../store";
 import {
   fetchConversationsThunk,
   fetchMessagesThunk,
+  selectConversationById,
+  updateMessage,
 } from "../../store/conversationSlice";
 import { showDisplayUser } from "../conversation/ConversationsSidebar";
+import { SocketContext } from "../../utils/context/SocketContext";
 
 export const MessagePanel: FC = () => {
   // if (!messages) messages = [];
@@ -20,9 +23,11 @@ export const MessagePanel: FC = () => {
   const idConversation = parseInt(id!);
   const dispatch = useDispatch<AppDispatch>();
   const [recipient, setRecipient] = useState<User>();
-  const conversation = useSelector(
-    (state: RootState) => state.conversation.conversations
-  ).find((x) => x.id == idConversation);
+  const socket = useContext(SocketContext);
+  const conversation = useSelector((state: RootState) =>
+    selectConversationById(state, idConversation)
+  );
+  console.log("conversation: ", conversation);
   const fetchingStatus = useSelector(
     (state: RootState) => state.conversation.fetching
   );

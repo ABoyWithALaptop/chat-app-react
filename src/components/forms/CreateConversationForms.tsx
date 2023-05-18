@@ -1,6 +1,5 @@
 import { FC, SyntheticEvent, useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import Select from "react-select";
 import { createConversation, getAllAvailableUsers } from "../../utils/api";
 import {
   Button,

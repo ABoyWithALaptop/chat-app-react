@@ -1,5 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createDraftSafeSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import rfdc from "rfdc";
 import {
   Conversation,
   MessagesFetchPayloadType,
@@ -137,17 +142,30 @@ export const conversationsSlice = createSlice({
       }
     },
     updateMessage: (state, action: PayloadAction<Message>) => {
+      const cloneDeep = rfdc();
       console.log("updateMessage", action.payload);
       const indexOfConversation = state.conversations.findIndex((x) => {
         return x.id === action.payload.conversation.id;
       });
-      const temp = state.conversations[indexOfConversation].messages!;
+      console.log("index of conversation", indexOfConversation);
+      const currentConversations = cloneDeep(state.conversations);
+      const temp = currentConversations[indexOfConversation].messages!;
+      console.log("temp", temp);
       action.payload.content = "This message has been deleted";
       const index = temp.findIndex((x) => x.id === action.payload.id);
       temp[index] = action.payload;
-      state.conversations[action.payload.conversation.id - 1].messages = [
-        ...temp,
-      ];
+      if (
+        currentConversations[indexOfConversation].lastMessageSent?.id ===
+        action.payload.id
+      ) {
+        currentConversations[indexOfConversation].lastMessageSent =
+          currentConversations[indexOfConversation].messages![index + 1] ||
+          undefined;
+      }
+      currentConversations[indexOfConversation].messages = [...temp];
+      state.conversations = currentConversations;
+
+      // state.conversations = clone;
     },
   },
   extraReducers(builder) {
@@ -208,6 +226,17 @@ export const conversationsSlice = createSlice({
       );
   },
 });
+
+export const selectConversations = (state: RootState) => state.conversation;
+
+export const selectConversationId = (state: RootState, id: number) => id;
+
+export const selectConversationById = createDraftSafeSelector(
+  [selectConversations, selectConversationId],
+  (state, id) => {
+    return state.conversations.find((x) => x.id === id);
+  }
+);
 
 //* Action creators are generated for each case reducer function
 export const { addConversation, addMessage, updateMessage } =

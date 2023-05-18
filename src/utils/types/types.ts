@@ -33,7 +33,7 @@ export type Message = {
   conversation: Conversation;
 };
 export type createConversationParams = {
-  recipientId: number;
+  recipientEmail: string;
   message: string;
 };
 export type MessageEventPayload = {
@@ -51,4 +51,8 @@ export type CreateMessageParams = {
 export type MessagesFetchPayloadType = {
   conversationId: number;
   messages: Message[];
+};
+export type deleteMessageParams = {
+  conversationId: number;
+  messageId: number;
 };

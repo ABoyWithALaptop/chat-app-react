@@ -1,8 +1,11 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, memo, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { AppDispatch, RootState } from "../../store";
-import { updateUserTyping } from "../../store/typingStatusSlice";
+import {
+  selectConversationById,
+  updateUserTyping,
+} from "../../store/typingStatusSlice";
 import { postMessage } from "../../utils/api";
 import { SocketContext } from "../../utils/context/SocketContext";
 import {
@@ -24,6 +27,7 @@ type props = {
 };
 
 const Typing: FC<props> = (props) => {
+  console.log("typing");
   return (
     <div key={props.username} className={props.class}>
       User {props.username} is typing...
@@ -31,15 +35,22 @@ const Typing: FC<props> = (props) => {
   );
 };
 
+const MemoizedTyping = memo(Typing, (prevProps, nextProps) => {
+  return prevProps.username === nextProps.username;
+});
+
 export const MessageInputField: FC = () => {
   const [content, setContent] = useState("");
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout>();
   const socket = useContext(SocketContext);
   const { id } = useParams()!;
   const idNumber = parseInt(id!);
-  const conversation = useSelector(
-    (state: RootState) => state.typingStatus.conversationList
-  ).find((x) => x.conversationId === idNumber);
+  // const conversation = useSelector(
+  //   (state: RootState) => state.typingStatus.conversationList,
+  // ).find((x) => x.conversationId === idNumber);
+  const conversation = useSelector((state: RootState) =>
+    selectConversationById(state, idNumber)
+  );
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -50,12 +61,9 @@ export const MessageInputField: FC = () => {
           updateUserTyping({ conversationId: idNumber, typingUsers: user })
         );
       }
-      console.log("conversation", conversation);
-      console.log("alo", user);
     });
     socket.on("userNotTyping", (user: User[]) => {
       const userStillType = [...user];
-      console.log("user still type", userStillType);
       dispatch(
         updateUserTyping({
           conversationId: idNumber,
@@ -67,14 +75,13 @@ export const MessageInputField: FC = () => {
       socket.off("userType");
       socket.off("userNotTyping");
     };
-  }, []);
+  }, [idNumber]);
 
   const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value);
     if (event.target.value.length > 0) {
       if (typingTimeout) clearTimeout(typingTimeout);
       const newTimeout = setTimeout(() => {
-        console.log("not typing");
         socket.emit("notTyping", idNumber);
       }, 1000);
       setTypingTimeout(newTimeout);
@@ -82,18 +89,17 @@ export const MessageInputField: FC = () => {
     }
   };
   const sendMessage = async (mess: React.FormEvent<HTMLFormElement>) => {
-    console.log("send message");
     mess.preventDefault();
     if (!id || !content) throw new Error("Missing id or content");
     const conversationId = idNumber;
     try {
-      console.log("try");
       await postMessage({ conversationId, content: content });
       setContent("");
     } catch (error) {
       console.log("error on sending message: ", error);
     }
   };
+
   return (
     <>
       <MessageInputContainerStyle>
@@ -102,11 +108,10 @@ export const MessageInputField: FC = () => {
         </form>
       </MessageInputContainerStyle>
       {conversation?.typingUsers && conversation?.typingUsers.length > 0 ? (
-        <Typing
+        <MemoizedTyping
           username={conversation!.typingUsers
             .map((user) => {
-              console.log("users", user);
-              return user.lastName;
+              return user.firstName;
             })
             .join(" and ")}
           class={styles.userTyping}

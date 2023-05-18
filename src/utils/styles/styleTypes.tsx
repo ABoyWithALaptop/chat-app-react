@@ -15,3 +15,10 @@ export type MessageItemContentProps = Partial<{
 export type sideBarProps = Partial<{
   active: boolean;
 }>;
+export type InputSearchResultItemStyleProps = Partial<{
+  backgroundColor: string;
+  clicked: boolean;
+}>;
+export type InputSearchResultStyleProps = Partial<{
+  height: string;
+}>;

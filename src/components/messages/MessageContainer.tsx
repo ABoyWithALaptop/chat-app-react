@@ -1,7 +1,7 @@
 import { formatRelative } from "date-fns";
-import { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { FC, useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import {
   MessageContainerStyle,
   MessageItemAvatar,
@@ -27,12 +27,18 @@ import "tippy.js/dist/tippy.css";
 import { Icons } from "../../utils/images/icons/more";
 import { deleteMessageById } from "../../utils/api";
 import { useParams } from "react-router";
+import {
+  selectConversationById,
+  updateMessage,
+} from "../../store/conversationSlice";
+import { SocketContext } from "../../utils/context/SocketContext";
 
 type Props = {
   messages: Message[];
 };
 type FormattedProps = {
   mess: Message;
+  modified: boolean;
   css?: {
     padding?: string;
     direction?: string;
@@ -43,8 +49,7 @@ const MenuItem = (props: MenuItemProps) => (
   <MenuItemInner {...props} className={styles.dark_menu_item} />
 );
 
-const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
-  const [messageItSelf, setMessageItSelf] = useState<Message>({ ...mess });
+const FormattedMessage: FC<FormattedProps> = ({ mess, css, modified }) => {
   const [source, target] = useSingleton();
   const { id } = useParams();
 
@@ -52,6 +57,7 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
     <MessageItemContent
       padding={css?.padding || "0"}
       direction={css?.direction}
+      className={modified ? styles.modified : ""}
     >
       <Tippy
         singleton={source}
@@ -61,66 +67,77 @@ const FormattedMessage: FC<FormattedProps> = ({ mess, css }) => {
         animation="fade"
       />
       <Tippy
-        content={formatRelative(new Date(messageItSelf.createdAt), new Date())}
+        content={formatRelative(new Date(mess.createdAt), new Date())}
         singleton={target}
       >
-        <span>{messageItSelf.content}</span>
+        <span>{mess.content}</span>
       </Tippy>
-      <Menu
-        menuButton={({ open }) =>
-          open ? (
-            <MenuButton
-              className={`${styles.menu_button} ${styles.clicked_button}`}
-            >
-              <Icons />
-            </MenuButton>
-          ) : (
-            <MenuButton className={`${styles.menu_button} `}>
-              <Icons />
-            </MenuButton>
-          )
-        }
-        transition
-        // arrow
-        menuClassName={`${styles.dark_menu}`}
-        // theming="dark"
-      >
-        <MenuItem
-          onClick={() => {
-            copyMsg(messageItSelf.content);
-          }}
+      {!modified && (
+        <Menu
+          menuButton={({ open }) =>
+            open ? (
+              <MenuButton
+                className={`${styles.menu_button} ${styles.clicked_button}`}
+              >
+                <Icons />
+              </MenuButton>
+            ) : (
+              <MenuButton className={`${styles.menu_button} `}>
+                <Icons />
+              </MenuButton>
+            )
+          }
+          transition
+          // arrow
+          menuClassName={`${styles.dark_menu}`}
+          // theming="dark"
         >
-          Copy
-        </MenuItem>
-        <MenuItem
-          onClick={async () => {
-            console.log("delete message", messageItSelf);
-            const result = await deleteMsg({
-              messageId: messageItSelf.id,
-              conversationId: parseInt(id!),
-            });
-
-            if (result) {
-              console.log("deleted and result", result);
-              const temp = { ...messageItSelf };
-              temp.content = "This message has been deleted";
-              setMessageItSelf(temp);
-            } else return;
-          }}
-        >
-          Delete
-        </MenuItem>
-      </Menu>
+          <MenuItem
+            onClick={() => {
+              copyMsg(mess.content);
+            }}
+          >
+            Copy
+          </MenuItem>
+          <MenuItem
+            onClick={async () => {
+              console.log("delete message", mess);
+              const result = await deleteMsg({
+                messageId: mess.id,
+                conversationId: parseInt(id!),
+              });
+            }}
+          >
+            Delete
+          </MenuItem>
+        </Menu>
+      )}
     </MessageItemContent>
   );
 };
 
 export const MessageContainer: FC<Props> = ({ messages }) => {
+  const socket = useContext(SocketContext);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    socket.on("onMessageDelete", (payload: Message) => {
+      console.log("onMessageDelete received", payload);
+      dispatch(updateMessage(payload));
+      setModifiedMessagesId((prev) => [...prev, payload.id]);
+    });
+    return () => {
+      socket.off("onMessageDelete");
+    };
+  }, []);
   const user = useSelector((state: RootState) => state.user.currentUser);
+  const [modifiedMessagesId, setModifiedMessagesId] = useState<number[]>([]);
+  console.log("messages state", messages);
   /* A function that takes in an array of messages and returns a new array of messages jsx elements. */
   const formatMessage = (messages: Message[]) => {
+    console.log("messages", messages);
     return messages.map((m: Message, i: number) => {
       const prevIndex = i !== messages.length - 1 ? i + 1 : i;
+      const modified = modifiedMessagesId.includes(m.id);
       const prevMess = messages[prevIndex];
       if (m.author.id !== prevMess.author.id || i === messages.length - 1)
         return (
@@ -140,6 +157,7 @@ export const MessageContainer: FC<Props> = ({ messages }) => {
               <FormattedMessage
                 css={{ padding: "10px 0px 0px 0px" }}
                 mess={m}
+                modified={modified}
               ></FormattedMessage>
             </MessageItemDetails>
           </MessageItemContainerStyle>
@@ -152,7 +170,7 @@ export const MessageContainer: FC<Props> = ({ messages }) => {
             }`}
             key={m.id}
           >
-            <FormattedMessage mess={m} />
+            <FormattedMessage mess={m} modified={modified} />
           </MessageItemContainerStyle>
         );
     });
