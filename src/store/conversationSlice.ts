@@ -17,12 +17,11 @@ import {
 	getConversationMessages,
 	getConversations,
 } from "../utils/api";
-import { AppDispatch, RootState } from ".";
+import { RootState } from ".";
 import {
 	addConversationToTypingStatus,
 	initialConversation,
 } from "./typingStatusSlice";
-import { act } from "react-dom/test-utils";
 
 /**
  * Define a type for the slice state

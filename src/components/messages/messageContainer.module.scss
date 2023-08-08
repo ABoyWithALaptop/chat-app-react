@@ -93,6 +93,7 @@
 }
 .modified {
   text-decoration: line-through;
+  user-select: none;
   & span {
     border: 1px solid #f8ede32d;
     background-color: #00000000 !important;
